@@ -1,0 +1,61 @@
+.tagSelectionContainer {
+display:flex;
+flex-direction:column;
+}
+
+.tagsContiner{
+display:flex;
+height:5.625rem;
+overflow:auto;
+background: #ffffff;
+flex-direction: column;
+gap:0.5rem;
+padding:0.5rem 0.75rem;
+border: #ececec solid;
+box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+} 
+
+
+
+.tagButton{
+padding:0.5rem 1.5rem 0.5rem 1.5rem;
+border-radius:2rem;
+border:none;
+background: #F1F2F3;
+}
+
+.tagButtonCancelable{
+padding:0.5rem 1.5rem 0.5rem 1.5rem;
+border-radius:2rem;
+border:none;
+background: #F1F2F3;
+display:flex;
+gap:0.7rem;
+}
+
+.svgCancel{
+  margin-top:0.1rem;
+}
+
+.tagSelectedWrap{
+display:flex;
+flex-direction: row;
+flex-wrap:wrap;
+gap:0.5rem;
+padding:0.5rem 1.5rem 0.5rem 1.5rem;
+border: 0.1rem #ececec solid;
+background:#ffffff;
+&:focus-within{
+  border: 0.1rem #0073e7 solid;
+}
+}
+
+.tagInput{
+  border:none;
+&:focus,&:active{
+  border:none;
+  outline:none;
+}
+}
+
+

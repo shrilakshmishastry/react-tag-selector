@@ -16,7 +16,7 @@ const TagSelector = ({
   const [tags, setSelectedTags] = useState([]);
   const [availableTagsForModal, setAllavailableTagsForModal] = useState(tagsFilter);
   const inputRef = useRef(null);
-  const [handleModalOpen, setHandleModalOpen] = useState(false);
+
   const handleRemoveTag = (value, index) => {
     let interMediateArr = [...tags];
     interMediateArr.splice(index, 1);

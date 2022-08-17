@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-import './style.css'
+import './style.css';
 function _slicedToArray(arr, i) {
   return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
 }
@@ -92,6 +92,7 @@ var TagsModal = function TagsModal(_ref) {
       return /*#__PURE__*/React.createElement("div", {
         key: value + index.toString()
       }, /*#__PURE__*/React.createElement("button", {
+        tabIndex: 1,
         className: "tagButton",
         value: value,
         onClick: function onClick() {
@@ -130,6 +131,11 @@ var TagSelector = function TagSelector(_ref) {
     setAllavailableTagsForModal = _useState6[1];
 
   var inputRef = useRef(null);
+
+  var _useState7 = useState(false),
+    _useState8 = _slicedToArray(_useState7, 2);
+  _useState8[0];
+  _useState8[1];
 
   var handleRemoveTag = function handleRemoveTag(value, index) {
     var interMediateArr = _toConsumableArray(tags);
@@ -178,6 +184,7 @@ var TagSelector = function TagSelector(_ref) {
       className: "tagButtonCancelable",
       key: value,
       value: value,
+      tabIndex: 1,
       onClick: function onClick() {
         handleRemoveTag(value, index);
       }

@@ -15,7 +15,10 @@ const TagsModal = ({ tags, inputString, selectedTag }) => {
           if (value.includes(inputString)) {
             find = true;
             return (
-              <div key={value + index.toString()}>
+              <div
+                aria-label={value}
+                tabIndex={1}
+                key={value + index.toString()}>
                 <button
                   tabIndex={1}
                   className='tagButton'

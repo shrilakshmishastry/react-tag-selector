@@ -80,27 +80,28 @@ var TagsModal = function TagsModal(_ref) {
   var tags = _ref.tags,
     inputString = _ref.inputString,
     selectedTag = _ref.selectedTag;
-  // const[matchCount,setMatchCount] = useState(false);
-  // console.log(tags,inputString);
-  var find = false;
-  useEffect(function () { }, [inputString]);
+  useEffect(function () { }, [inputString, tags]);
   return /*#__PURE__*/React.createElement("div", {
-    className: "tagsContiner"
+    id: "tagOptions",
+    className: "tagsContiner",
+    "aria-live": "polite",
+    "aria-atomic": "true",
+    "aria-relevant": "all",
+    role: 'region'
+  }, /*#__PURE__*/React.createElement("div", {
+    "aria-label": "available tags ".concat(tags.toString(), "\n          Use Tab and shift tab to access tags\n          Press enter button to select \n          ")
   }, tags && tags.map(function (value, index) {
-    if (value.includes(inputString)) {
-      find = true;
-      return /*#__PURE__*/React.createElement("div", {
-        key: value + index.toString()
-      }, /*#__PURE__*/React.createElement("button", {
-        tabIndex: 1,
-        className: "tagButton",
-        value: value,
-        onClick: function onClick() {
-          return selectedTag(value, index);
-        }
-      }, value));
-    }
-  }), !find && /*#__PURE__*/React.createElement("p", null, "no match"));
+    return /*#__PURE__*/React.createElement("div", {
+      key: value + index.toString()
+    }, /*#__PURE__*/React.createElement("button", {
+      className: "tagButton",
+      value: value,
+      onClick: function onClick(e) {
+        e.currentTarget.blur();
+        selectedTag(value);
+      }
+    }, value));
+  })), tags && tags.length === 0 && /*#__PURE__*/React.createElement("p", null, "no match"));
 };
 
 TagsModal.propTypes = {
@@ -127,32 +128,37 @@ var TagSelector = function TagSelector(_ref) {
 
   var _useState5 = useState(tagsFilter),
     _useState6 = _slicedToArray(_useState5, 2),
-    availableTagsForModal = _useState6[0],
-    setAllavailableTagsForModal = _useState6[1];
+    notSelectedTags = _useState6[0],
+    setNotSelectedTags = _useState6[1];
+
+  var _useState7 = useState(tagsFilter),
+    _useState8 = _slicedToArray(_useState7, 2),
+    availableTagsForModal = _useState8[0],
+    setAllavailableTagsForModal = _useState8[1];
 
   var inputRef = useRef(null);
-
-  var _useState7 = useState(false),
-    _useState8 = _slicedToArray(_useState7, 2);
-  _useState8[0];
-  _useState8[1];
 
   var handleRemoveTag = function handleRemoveTag(value, index) {
     var interMediateArr = _toConsumableArray(tags);
 
+    inputRef.current.focus();
     interMediateArr.splice(index, 1);
-    setSelectedTags(interMediateArr);
-    setAllavailableTagsForModal([].concat(_toConsumableArray(availableTagsForModal), [value]));
+    setSelectedTags(_toConsumableArray(interMediateArr));
+    setNotSelectedTags([].concat(_toConsumableArray(notSelectedTags), [value]));
+    setAllavailableTagsForModal([].concat(_toConsumableArray(notSelectedTags), [value]));
     removeTag(index);
   };
 
-  var handleSelectedTag = function handleSelectedTag(value, index) {
+  var handleSelectedTag = function handleSelectedTag(value) {
     setSelectedTags([].concat(_toConsumableArray(tags), [value]));
 
-    var interMediateArr = _toConsumableArray(availableTagsForModal);
+    var interMediateArr = _toConsumableArray(notSelectedTags);
 
+    var index = notSelectedTags.indexOf(value);
     interMediateArr.splice(index, 1);
     setInputString('');
+    inputRef.current.focus();
+    setNotSelectedTags(_toConsumableArray(interMediateArr));
     setAllavailableTagsForModal(_toConsumableArray(interMediateArr));
     selectedTag(value);
   };
@@ -164,14 +170,25 @@ var TagSelector = function TagSelector(_ref) {
       var removed = intermediateArr.pop();
       setSelectedTags(intermediateArr);
       selectedTag(intermediateArr);
-      setAllavailableTagsForModal([].concat(_toConsumableArray(availableTagsForModal), [removed]));
+      setNotSelectedTags([].concat(_toConsumableArray(notSelectedTags), [removed]));
+      setAllavailableTagsForModal([].concat(_toConsumableArray(notSelectedTags), [removed]));
     }
+  };
+
+  var handleInputChange = function handleInputChange(value) {
+    setInputString(value.target.value);
+
+    var interArr = _toConsumableArray(notSelectedTags);
+
+    var res = interArr.filter(function (val) {
+      return val.includes(value.target.value);
+    });
+    setAllavailableTagsForModal(_toConsumableArray(res));
   };
 
   return /*#__PURE__*/React.createElement("div", {
     className: "tagSelectionContainer"
   }, /*#__PURE__*/React.createElement("div", {
-    "aria-role": "search",
     "aria-label": 'Search Tag',
     className: "tagSelectedWrap",
     id: "tagSearchContainer",
@@ -183,9 +200,14 @@ var TagSelector = function TagSelector(_ref) {
     return /*#__PURE__*/React.createElement("button", {
       className: "tagButtonCancelable",
       key: value,
+      "aria-live": "polite",
+      "aria-atomic": "true",
+      "aria-relevant": "all",
       value: value,
-      tabIndex: 1,
-      onClick: function onClick() {
+      tabIndex: 0,
+      "aria-label": "Press enter to deselect ".concat(value),
+      onClick: function onClick(e) {
+        e.currentTarget.remove();
         handleRemoveTag(value, index);
       }
     }, value, /*#__PURE__*/React.createElement("svg", {
@@ -206,12 +228,12 @@ var TagSelector = function TagSelector(_ref) {
     "aria-labelledby": "tagSearchContainer",
     type: "text",
     onChange: function onChange(e) {
-      setInputString(e.target.value);
+      handleInputChange(e);
     },
     placeholder: 'Tags'
   })), inputString && /*#__PURE__*/React.createElement(TagsModal, {
-    selectedTag: function selectedTag(value, index) {
-      handleSelectedTag(value, index);
+    selectedTag: function selectedTag(value) {
+      handleSelectedTag(value);
       inputRef.current.value = '';
       setInputString('');
     },

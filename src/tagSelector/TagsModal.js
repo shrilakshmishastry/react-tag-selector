@@ -1,41 +1,53 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
 const TagsModal = ({ tags, inputString, selectedTag }) => {
-  // const[matchCount,setMatchCount] = useState(false);
-  // console.log(tags,inputString);
-  let find = false;
-  useEffect(() => { }, [inputString]);
+  useEffect(() => { }, [inputString, tags]);
   return (
-    <div className='tagsContiner'>
-      {
-        tags && tags.map((value, index) => {
-
-          if (value.includes(inputString)) {
-            find = true;
+    <div
+      id='tagOptions'
+      className='tagsContiner'
+      aria-live='polite' aria-atomic='true'
+      aria-relevant='all'
+      role={'region'}
+    >
+      <div
+        aria-label={
+          `available tags ${tags.toString()}
+          Use Tab and shift tab to access tags
+          Press enter button to select 
+          `
+        }
+      >
+        {
+          tags && tags.map((value, index) => {
             return (
               <div
-                aria-label={value}
-                tabIndex={1}
-                key={value + index.toString()}>
+                key={value + index.toString()}
+              >
                 <button
-                  tabIndex={1}
                   className='tagButton'
                   value={value}
-                  onClick={() => selectedTag(value, index)}>
+                  onClick={(e) => {
+                    e.currentTarget.blur();
+                    selectedTag(value);
+                  }}>
                   {value}
                 </button>
               </div>
             );
-          }
 
-        })
-      }
+
+          })
+        }
+
+      </div>
+
       {
-        !find && <p>no match</p>
+        tags && tags.length === 0 && <p>no match</p>
       }
-    </div>
+    </div >
 
   );
 };

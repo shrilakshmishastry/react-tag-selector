@@ -52,13 +52,16 @@ background:#ffffff;
 
 .tagInput{
   border:none;
-  background-color: #0073e7;
   flex-grow: 1;
   flex-basis: 50%;
 &:focus,&:active{
   border:none;
   outline:none;
 }
+}
+
+.hideDescription{
+  visibility: hidden;
 }
 
 

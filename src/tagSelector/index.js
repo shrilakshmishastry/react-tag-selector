@@ -14,22 +14,28 @@ const TagSelector = ({
 }) => {
   const [inputString, setInputString] = useState();
   const [tags, setSelectedTags] = useState([]);
+  const [notSelectedTags, setNotSelectedTags] = useState(tagsFilter);
   const [availableTagsForModal, setAllavailableTagsForModal] = useState(tagsFilter);
   const inputRef = useRef(null);
 
   const handleRemoveTag = (value, index) => {
     let interMediateArr = [...tags];
+    inputRef.current.focus();
     interMediateArr.splice(index, 1);
-    setSelectedTags(interMediateArr);
-    setAllavailableTagsForModal([...availableTagsForModal, value]);
+    setSelectedTags([...interMediateArr]);
+    setNotSelectedTags([...notSelectedTags, value]);
+    setAllavailableTagsForModal([...notSelectedTags, value]);
     removeTag(index);
   };
 
-  const handleSelectedTag = (value, index) => {
+  const handleSelectedTag = (value) => {
     setSelectedTags([...tags, value]);
-    let interMediateArr = [...availableTagsForModal];
+    let interMediateArr = [...notSelectedTags];
+    let index = notSelectedTags.indexOf(value);
     interMediateArr.splice(index, 1);
     setInputString('');
+    inputRef.current.focus();
+    setNotSelectedTags([...interMediateArr]);
     setAllavailableTagsForModal([...interMediateArr]);
     selectedTag(value);
   };
@@ -43,28 +49,41 @@ const TagSelector = ({
       let removed = intermediateArr.pop();
       setSelectedTags(intermediateArr);
       selectedTag(intermediateArr);
-      setAllavailableTagsForModal([...availableTagsForModal, removed]);
+      setNotSelectedTags([...notSelectedTags, removed]);
+      setAllavailableTagsForModal([...notSelectedTags, removed]);
     }
   };
 
+  const handleInputChange = (value) => {
+    setInputString(value.target.value);
+    let interArr = [...notSelectedTags];
+    let res = interArr.filter((val) => val.includes(value.target.value));
+    setAllavailableTagsForModal([...res]);
+  }
 
   return (
     <div className='tagSelectionContainer'>
       <div
-        aria-role='search'
         aria-label={'Search Tag' || lableForInputTag}
         className='tagSelectedWrap'
         id='tagSearchContainer'
         tabIndex={0}
         onKeyDown={(event) => handleKeyDown(event)}>
+
         {
           tags && tags.map((value, index) => {
             return (
               <button className='tagButtonCancelable'
                 key={value}
+                aria-live='polite' aria-atomic='true'
+                aria-relevant='all'
                 value={value}
-                tabIndex={1}
-                onClick={() => { handleRemoveTag(value, index); }}
+                tabIndex={0}
+                aria-label={`Press enter to deselect ${value}`}
+                onClick={(e) => {
+                  e.currentTarget.remove();
+                  handleRemoveTag(value, index);
+                }}
               >
                 {value}
                 <svg
@@ -84,13 +103,15 @@ const TagSelector = ({
 
         }
 
+
+
         <input className='tagInput'
           id='tag-input'
           ref={inputRef}
           aria-labelledby='tagSearchContainer'
           type='text'
           onChange={(e) => {
-            setInputString(e.target.value);
+            handleInputChange(e);
           }}
           placeholder={'Tags'}
         />
@@ -99,8 +120,8 @@ const TagSelector = ({
       {
         inputString && (
           <TagsModal
-            selectedTag={(value, index) => {
-              handleSelectedTag(value, index);
+            selectedTag={(value) => {
+              handleSelectedTag(value);
               inputRef.current.value = '';
               setInputString('');
             }}

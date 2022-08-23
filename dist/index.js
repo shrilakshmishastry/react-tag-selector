@@ -146,7 +146,7 @@ var TagSelector = function TagSelector(_ref) {
     setSelectedTags(_toConsumableArray(interMediateArr));
     setNotSelectedTags([].concat(_toConsumableArray(notSelectedTags), [value]));
     setAllavailableTagsForModal([].concat(_toConsumableArray(notSelectedTags), [value]));
-    removeTag(index);
+    removeTag(value);
   };
 
   var handleSelectedTag = function handleSelectedTag(value) {

@@ -25,7 +25,7 @@ const TagSelector = ({
     setSelectedTags([...interMediateArr]);
     setNotSelectedTags([...notSelectedTags, value]);
     setAllavailableTagsForModal([...notSelectedTags, value]);
-    removeTag(index);
+    removeTag(value);
   };
 
   const handleSelectedTag = (value) => {
